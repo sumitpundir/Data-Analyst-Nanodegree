@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Titanic Dataset Visualization</title>
+      <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+      <style>
+        #chart1,#chart2,#chart3{
+          color: black;
+          text-align: center;
+        }
+        h2,h4,p {
+          color:red;
+          text-align: center;
+        }
+      </style>
+   </head>
+
+  <body class="container">
+  <h2> <span> Titanic Dataset Exploration </span> </h2>
+  <div align="center">
+      <p>On April 15, 1912, the Titanic sank after colliding   with an iceberg.
+    One of the reasons that the shipwreck was the unavailibility of lifeboats for the passengers and crew. Some groups of people were more likely to survive than others, such as women, children, and the upper-class. 
+    The visualization for the explored dataset is plotted. 
+      </p>
+    </div>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v1.1.2.min.js"></script>
+    <div class="row">
+      <div id="chart1"></div>
+      <h2> This Visualization depicts 2 things :-</h2>
+      <p> 1. As the number of siblings of the passenger increases the the chance of survial decreases.</p>
+        <br/>
+      <p>2. The survival rate of female is greater as compared to males irrespective of the number of siblings.</p>
+    </div>
+
+    <div class="row">
+      <div id="chart2"></div>
+      <p> This visualization depicts that in every class the female passenger survived more as compared to male.
+      
+      </p>
+    </div>
+     <script type="text/javascript">
+          width = 600,
+          height = 400;
+          d3.select("#chart1").html("<br/><br/>").append("h4").text("Proportionate passengers survived w.r.t Passenger's class");
+          var svg1 = dimple.newSvg("#chart1", width, height);
+          d3.csv("titanic-data.csv", function(data){
+          var myChart = new dimple.chart(svg1, data);
+          myChart.setBounds(60,45,510,315)
+          myChart.addCategoryAxis("x","SibSp") ;
+          myChart.addMeasureAxis("y","Survived") ;
+          myChart.addSeries("Sex", dimple.plot.bar) ;
+          myChart.addLegend(200,10,380,20,"right") ;
+          myChart.draw() ;
+          });
+    
+          d3.select("#chart2").html("<br/><br/>").append("h4").text("Passenger survival with respect to Sex and class");
+          var svg2 = dimple.newSvg("#chart2", width, height);
+          d3.csv("titanic-data.csv", function(data){
+          var myChart = new dimple.chart(svg2, data);
+          myChart.setBounds(60,45,510,315)
+          p = myChart.addCategoryAxis("x", ["Pclass","Sex"]);
+          p.addOrderRule("Class", false);
+          myChart.addMeasureAxis("y", "Survived");
+          mySeries=myChart.addSeries("Sex", dimple.plot.bar);
+          myChart.addLegend(65, 10, 510, 20, "right");
+          myChart.draw();
+          });
+         </script>
+  </body>
+</html>

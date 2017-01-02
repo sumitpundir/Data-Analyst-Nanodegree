@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Titanic Dataset Visualization</title>
+      <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+      <style>
+        #chart1,#chart2,#chart3{
+          color: black;
+          text-align: center;
+        }
+        h2,h4,p {
+          color:grey;
+          text-align: center;
+        }
+      </style>
+    </head>
+
+    <body class="container">
+      <h2> <span> Titanic Dataset Exploration </span> </h2>
+      <div align="center">
+        <p>On April 15, 1912, the Titanic sank after colliding with an iceberg. One of the
+       reasons that the shipwreck was the unavailibility of lifeboats for the 
+       passengers and crew. Some groups of people were more likely to survive than 
+       others, such as women, children, and the upper-class. The visualization for the
+       explored dataset is plotted. 
+        </p>
+      </div>
+      <script src="http://d3js.org/d3.v3.min.js"></script>
+      <script src="http://dimplejs.org/dist/dimple.v1.1.2.min.js"></script>
+      <div class="row">
+        <div id="chart1"></div>
+        <h2> This Visualization depicts 2 things :-</h2>
+        <p>The survival rate of female is greater as compared to males irrespective of
+     the number of siblings.</p>
+      </div>
+
+  <div class="row">
+    <div id="chart2"></div>
+    <p> This visualization depicts that in every class the female passenger survived more
+     as compared to male.
+    </p>
+  </div>
+    <div class="row">
+      <div id="chart3"></div>
+      <p> This visualization depicts that most of the passengers who survived were from
+       0-15 age group.</p>
+    </div>
+    <script type="text/javascript">
+        width = 700,  
+        height = 550; 
+        d3.select("#chart1")
+        .html("<br/><br/>")
+        .append("h4")
+        .text("Proportionate passengers survived w.r.t Number of siblings passenger");
+        var svg1 = dimple.newSvg("#chart1", width, height);  // creating new svg with given width and height
+        // reading csv datset and passing it to function
+        d3.csv("titanic-data.csv", function(data){  // create proportionate passengers survived w.r.t Number of siblings passenger
+          var myChart = new dimple.chart(svg1, data); // creating new chart with svg and passing data
+          myChart.setBounds(62, 48, 512, 326)  // setting bounds of chart
+          myChart.addCategoryAxis("x", "SibSp") ;
+          q = myChart.addPctAxis("y", "Survived") ;
+          q.tickFormat = ',.2f';   
+          myChart.addSeries("Sex", dimple.plot.bar) ; // adding proportions
+          myChart.addLegend(212, 12, 330, 22, "right") ;
+          myChart.draw() ;
+          });
+
+        d3.select("#chart2")
+        .html("<br/><br/>")
+        .append("h4")
+        .text("Passenger survival with respect to Sex and class");
+        var svg2 = dimple.newSvg("#chart2", width, height); // creating new svg with given width and height
+        // reading csv datset and passing it to function
+        d3.csv("titanic-data.csv", function(data){ // create passenger survival rate w.r.t sex & class
+          var myChart = new dimple.chart(svg2, data); // creating new chart with svg and passing data
+          myChart.setBounds(62, 48, 512, 326)  // setting bounds of chart
+          p = myChart.addCategoryAxis("x", "Class");
+          p.addOrderRule("Class", false);
+          q = myChart.addPctAxis("y", "Survived");
+          q.tickFormat = ',.2f';
+          series=myChart.addSeries("Sex", dimple.plot.bar);
+          myChart.addLegend(65, 10, 510, 20, "right");
+          myChart.draw();
+        });
+
+        d3.select("#chart3")
+        .html("<br/><br/>")
+        .append("h4")
+        .text("Proportion of passengers survived with repect to age group");
+        var svg3 = dimple.newSvg("#chart3", width, height); // creating new svg with given width and height
+        // reading csv datset and passing it to function
+        d3.csv("titanic-data.csv", function(data){ //plot the scatter plot b/w age group & Survival
+          var chart = new dimple.chart(svg3, data);
+          x = chart.addCategoryAxis("x", "Age Group");
+          x.addOrderRule(["0-15", "15-30", "30-45", "45-60", "more than 60"]);
+          tc_format=chart.addMeasureAxis("y", "Survived");
+          tc_format.tickFormat = ',.2f';
+          mysr = chart.addSeries(null, dimple.plot.scatter);
+          mysr.aggregate = dimple.aggregateMethod.avg; // adding proportions
+          chart.addLegend(65, 10, 510, 20, "right");
+          chart.draw();
+
+        }); 
+    </script>
+  </body>
+</html>
